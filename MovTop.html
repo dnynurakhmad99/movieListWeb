@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" 
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+    crossorigin="anonymous">
+    <title>UAS</title>
+</head>
+<body style="background-image: url('Pilem.jpg'); background-attachment: fixed; background-size: cover;">
+    <div class="container p-3 text-center">
+        <a href="HalamanUtama.html">
+            <div class="rounded-pill text-dark p-3" style="background-color:#F3E9D4">
+                <h1>Pilem Data Base</h1>
+            </div>
+        </a>
+        <br />
+
+        <div class="rounded-pill text-white text-center p-2" style="background-color:#778087">
+            <h2 class="m-2"><i class="fas fa-film"></i> Movie</h2>
+        </div>
+        <br />
+
+        <div class="rounded-pill bg-dark text-white text-center p-1">
+            <h3 class="m-2"><i class="fas fa-thumbs-up"></i> Film Rating Tinggi</h3>
+        </div>
+        <br />
+
+        <table class="table table-hover rounded" style="background-color:#F3E9D4">
+            <tbody id="movTop"></tbody>
+        </table>
+
+        <button id="tampilLagi" class="btn rounded-pill" style="background-color:#E3FC02">Tampilkan lagi</button>
+        <a href="HalamanMovie.html" class="btn rounded-pill" style="background-color:#E3FC02">Kembali</a>
+    </div>
+
+    <script>
+        function composeFilmObject(image, judul, nilai, tanggal, sinopsis){
+            return{
+                image,
+                judul,
+                nilai,
+                tanggal,
+                sinopsis
+            };
+        }
+
+        api4 = 'https://api.themoviedb.org/3/movie/top_rated?api_key=72ff544c97191bc70b310d33443c6a94';
+        hal = 1;
+
+        $.ajax
+        ({
+            url: api4,
+
+            success: function(res)
+            {
+                for(var i=0; i < res.results.length; i++)
+                {
+                    var film = res.results[i];
+
+                    var tr = $('<tr></tr>');
+
+                    var tag = "";
+                    tag += "<td><img class='rounded' src = 'https://image.tmdb.org/t/p/w500/" +film.poster_path+ "'height = '332px' width = '221px'>" + "</td>";
+                    tag += "<td><h4><span class='judul'>" +film.title+ "</span></h4><br /><p><i class='fas fa-star'></i> <span class='nilai'>" +film.vote_average+ "</span></p><p><i class='fas fa-calendar-alt'></i> <span class='tanggal'>" +film.release_date+ "</span></p><p><span class='sinopsis'>" +film.overview+ "<span></p></td>";
+                    tag += "<td><br /><br /><buttonFav id='fvrt' class='btn rounded-pill' style='background-color:#E3FC02'>Favorit <i class='fas fa-heart'></i></buttonFav></td>"
+
+                    $('#movTop').append(tr.html(tag));
+                }
+
+                $('buttonFav').click(function(e)
+                {
+                    let filmElement = e.target.parentElement.parentElement
+
+                    let image = filmElement.querySelector('img').src
+                    let judul = filmElement.querySelector('.judul').innerText
+                    let nilai = filmElement.querySelector('.nilai').innerText
+                    let tanggal = filmElement.querySelector('.tanggal').innerText
+                    let sinopsis = filmElement.querySelector('.sinopsis').innerText
+
+                    let filmObject = composeFilmObject(image, judul, nilai, tanggal, sinopsis)
+
+                    let data_film;
+
+                    if(localStorage.getItem('favorite')===null)
+                    {
+                        data_film = [];
+                    }
+                    else
+                    {
+                        data_film = JSON.parse(localStorage.getItem('favorite'));
+                    }
+
+                    console.log(filmObject)
+
+                    data_film.push(filmObject);
+                    localStorage.setItem('favorite', JSON.stringify(data_film));
+                    alert("Berhasil menambahkan ke Favorit")
+                })
+            }
+        })
+
+        $('#tampilLagi').click(function()
+        {
+            hal++
+
+            $.ajax
+            ({
+                url: api4 + '&page=' +hal,
+
+                success: function(res)
+                {
+                    for(var i=0; i < res.results.length; i++)
+                    {
+                        var film = res.results[i];
+
+                        var tr = $('<tr></tr>');
+
+                        var tag = "";
+                        tag += "<td><img class='rounded' src = 'https://image.tmdb.org/t/p/w500/" +film.poster_path+ "'height = '332px' width = '221px'>" + "</td>";
+                    tag += "<td><h4><span class='judul'>" +film.title+ "</span></h4><br /><p><i class='fas fa-star'></i> <span class='nilai'>" +film.vote_average+ "</span></p><p><i class='fas fa-calendar-alt'></i> <span class='tanggal'>" +film.release_date+ "</span></p><p><span class='sinopsis'>" +film.overview+ "<span></p></td>";
+                    tag += "<td><br /><br /><buttonFav id='fvrt' class='btn rounded-pill' style='background-color:#E3FC02'>Favorit <i class='fas fa-heart'></i></buttonFav></td>"
+
+                        $('#movTop').append(tr.html(tag));
+                    }
+
+                    $('buttonFav').click(function(e)
+                    {
+                        let filmElement = e.target.parentElement.parentElement
+
+                        let image = filmElement.querySelector('img').src
+                        let judul = filmElement.querySelector('.judul').innerText
+                        let nilai = filmElement.querySelector('.nilai').innerText
+                        let tanggal = filmElement.querySelector('.tanggal').innerText
+                        let sinopsis = filmElement.querySelector('.sinopsis').innerText
+
+                        let filmObject = composeFilmObject(image, judul, nilai, tanggal, sinopsis)
+
+                        let data_film;
+
+                        if(localStorage.getItem('favorite')===null)
+                        {
+                            data_film = [];
+                        }
+                        else
+                        {
+                            data_film = JSON.parse(localStorage.getItem('favorite'));
+                        }
+
+                        console.log(filmObject)
+
+                        data_film.push(filmObject);
+                        localStorage.setItem('favorite', JSON.stringify(data_film));
+                        alert("Berhasil menambahkan ke favorit")
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" 
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+    crossorigin="anonymous">
+    <title>UAS</title>
+</head>
+<body style="background-image: url('Pilem.jpg'); background-attachment: fixed; background-size: cover;">
+    <div class="container p-3 text-center">
+        <a href="HalamanUtama.html">
+            <div class="rounded-pill text-dark p-3" style="background-color:#F3E9D4">
+                <h1>Pilem Data Base</h1>
+            </div>
+        </a>
+        <br />
+
+        <div class="rounded-pill text-white text-center p-2" style="background-color:#778087">
+            <h2 class="m-2"><i class="fas fa-film"></i> Movie</h2>
+        </div>
+        <br />
+
+        <div class="col-3 rounded-pill bg-dark text-white text-center p-1">
+            <h3 class="m-2"><i class="fas fa-fire"></i> Film Populer</h3>
+        </div>
+        <br />
+
+        <table class="table table-responsive text-center rounded" style="background-color:#F3E9D4">
+            <tbody id="movPop"></tbody>
+        </table>
+        <a href="MovPop.html" class="btn rounded-pill" style="background-color:#E3FC02">Tampilkan semua</a><br /><br />
+
+        <div class="col-4 rounded-pill bg-dark text-white text-center p-1">
+            <h3 class="m-2"><i class="fas fa-play"></i> Film Diputar Sekarang</h3>
+        </div>
+        <br />
+
+        <table class="table table-responsive text-center rounded" style="background-color:#F3E9D4">
+            <tbody id="movNow"></tbody>
+        </table>
+        <a href="MovNow.html" class="btn rounded-pill" style="background-color:#E3FC02">Tampilkan semua</a><br /><br />
+
+        <div class="col-4 rounded-pill bg-dark text-white text-center p-1">
+            <h3 class="m-2"><i class="fas fa-calendar-check"></i> Film Akan Datang</h3>
+        </div>
+        <br />
+
+        <table class="table table-responsive text-center rounded" style="background-color:#F3E9D4">
+            <tbody id="movUp"></tbody>
+        </table>
+        <a href="MovUp.html" class="btn rounded-pill" style="background-color:#E3FC02">Tampilkan semua</a><br /><br />
+
+        <div class="col-4 rounded-pill bg-dark text-white text-center p-1">
+            <h3 class="m-2"><i class="fas fa-thumbs-up"></i> Film Rating Tinggi</h3>
+        </div>
+        <br />
+
+        <table class="table table-responsive text-center rounded" style="background-color:#F3E9D4">
+            <tbody id="movTop"></tbody>
+        </table>
+        <a href="MovTop.html" class="btn rounded-pill" style="background-color:#E3FC02">Tampilkan semua</a><br /><br />
+
+        <div class="col-3 rounded-pill bg-dark text-white text-center p-1">
+            <h3 class="m-2"><i class="fas fa-heart"></i> Favorit Saya</h3>
+        </div>
+        <br />
+
+        <button id='showFavorite' class='btn rounded-pill' style="background-color:#E3FC02">Lihat favorit</button>
+
+        <div>
+            <table class="table table-hover rounded" style="background-color:#F3E9D4"> 
+            <tbody id="bodyFavorite"></tbody> 
+            </table> 
+        </div>
+    </div>
+
+    <script>
+        api1 = 'https://api.themoviedb.org/3/movie/popular?api_key=72ff544c97191bc70b310d33443c6a94';
+        api2 = 'https://api.themoviedb.org/3/movie/now_playing?api_key=72ff544c97191bc70b310d33443c6a94';
+        api3 = 'https://api.themoviedb.org/3/movie/upcoming?api_key=72ff544c97191bc70b310d33443c6a94';
+        api4 = 'https://api.themoviedb.org/3/movie/top_rated?api_key=72ff544c97191bc70b310d33443c6a94';
+
+        $.ajax
+        ({
+            url: api1,
+
+            success: function(res)
+            {
+                for(var i=0; i < 5; i++)
+                {
+                    var film = res.results[i];
+
+                    var td = $('<td></td>');
+
+                    var tag = "";
+                    tag += "<td><img class='rounded' src = 'https://image.tmdb.org/t/p/w500/" +film.poster_path+ "'height = '332px' width = '221px'>" + "</td>";
+                    tag += "<td><h4>" +film.title+ "</h4><br /><p><i class='fas fa-star'></i> " +film.vote_average+ "</p><p><i class='fas fa-calendar-alt'></i> " +film.release_date+ "</p></td>";
+
+                    $('#movPop').append(td.html(tag));
+                }
+            }
+        })
+
+        $.ajax
+        ({
+            url: api2,
+
+            success: function(res)
+            {
+                for(var i=0; i < 5; i++)
+                {
+                    var film = res.results[i];
+
+                    var td = $('<td></td>');
+
+                    var tag = "";
+                    tag += "<td><img class='rounded' src = 'https://image.tmdb.org/t/p/w500/" +film.poster_path+ "'height = '332px' width = '221px'>" + "</td>";
+                    tag += "<td><h4>" +film.title+ "</h4><br /><p><i class='fas fa-star'></i> " +film.vote_average+ "</p><p><i class='fas fa-calendar-alt'></i> " +film.release_date+ "</p></td>";
+
+                    $('#movNow').append(td.html(tag));
+                }
+            }
+        })
+
+        $.ajax
+        ({
+            url: api3,
+
+            success: function(res)
+            {
+                for(var i=0; i < 5; i++)
+                {
+                    var film = res.results[i];
+
+                    var td = $('<td></td>');
+
+                    var tag = "";
+                    tag += "<td><img class='rounded' src = 'https://image.tmdb.org/t/p/w500/" +film.poster_path+ "'height = '332px' width = '221px'>" + "</td>";
+                    tag += "<td><h4>" +film.title+ "</h4><br /><p><i class='fas fa-star'></i> " +film.vote_average+ "</p><p><i class='fas fa-calendar-alt'></i> " +film.release_date+ "</p></td>";
+
+                    $('#movUp').append(td.html(tag));
+                }
+            }
+        })
+
+        $.ajax
+        ({
+            url: api4,
+
+            success: function(res)
+            {
+                for(var i=0; i < 5; i++)
+                {
+                    var film = res.results[i];
+
+                    var td = $('<td></td>');
+
+                    var tag = "";
+                    tag += "<td><img class='rounded' src = 'https://image.tmdb.org/t/p/w500/" +film.poster_path+ "'height = '332px' width = '221px'>" + "</td>";
+                    tag += "<td><h4>" +film.title+ "</h4><br /><p><i class='fas fa-star'></i> " +film.vote_average+ "</p><p><i class='fas fa-calendar-alt'></i> " +film.release_date+ "</p></td>";
+
+                    $('#movTop').append(td.html(tag));
+                }
+            }
+        })
+
+        $('#showFavorite').click(function()
+        {
+            if(localStorage.getItem('favorite')===null)
+            {
+                alert("Favorit belum dipilih")
+            }
+                
+            else
+            {
+                $('#showFavorite').hide();
+
+                let myItem = JSON.parse(localStorage.getItem('favorite'));
+                    
+                for(let i = 0; i < myItem.length; i++)
+                {
+                    var tr = $('<tr></tr>');
+                    var tag = "";
+
+                    tag += "<td><img class='rounded' src = 'https://image.tmdb.org/t/p/w500/" +myItem[i].image+ "'height = '332px' width = '221px'>" + "</td>";
+                    tag += "<td><h4><span class='judul'>" +myItem[i].judul+ "</span></h4><br /><p><i class='fas fa-star'></i> <span class='nilai'>" +myItem[i].nilai+ "</span></p><p><i class='fas fa-calendar-alt'></i> <span class='tanggal'>" +myItem[i].tanggal+ "</span></p><p><span class='sinopsis'>" +myItem[i].sinopsis+ "<span></p></td>";
+
+                    $('#bodyFavorite').append(tr.html(tag));
+                }
+            }
+        })
+    </script>
+</body>
+</html>
